@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YRAPPI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <style>
+        html {
+            background-color: #f3d9ff;
+        }
+
+        body {
+            background-color: #f3d9ff;
+        }
+
+        h1 {
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #800080;
+            font-size: 80px;
+            font-family: "Lato", sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            text-decoration: underline double;
+        }
+
+        h2 {
+            color: #800080;
+            font-size: 60px;
+            font-family: "Lato", sans-serif;
+            font-style: italic;
+        }
+
+        .table {
+            background-color: white;
+            border-radius: 8px;
+            margin-top: 30px;
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15)
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-center mt-5 mb-5">YRAPPI</h1>
+    <h2 class="text-center mt-5 mb-5">Young Readers API</h2>
+
+    <div class="container">
+        <div class="card shadow">
+            <div class="card-body">
+                <form action="/book" method="POST">
+                    <div class="row-mb3">
+                        <div class="column">
+                            <label>Name</label>
+                            <input type="text" class="form-control mb-3" name="books_name">
+                        </div>
+
+                        <div class="column"></div>
+                            <label>Author</label>
+                            <input type="text" class="form-control mb-3" name="books_author">
+                        </div>
+
+                        <div class="column">
+                            <label>Date</label>
+                            <input type="text" class="form-control mb-3" name="books_date">
+                        </div>
+
+                        <div class="column">
+                            <label>Category</label>
+                            <input type="text" class="form-control mb-3" name="books_category">
+                        </div>
+
+                        <div class="column">
+                            <label>Position</label>
+                            <input type="text" class="form-control mb-3" name="books_position">
+                        </div>
+
+                        <div class="column">
+                            <label>Status</label>
+                            <input type="text" class="form-control mb-3" name="books_status">
+                        </div>
+
+                        <div class="column">
+                            <label>Review</label>
+                            <input type="text" class="form-control mb-3" name="books_review">
+                        </div>
+
+                        <div class="column">
+                            <label>Image</label>
+                            <input type="text" class="form-control mb-3" name="books_image">
+                        </div>
+
+                        <div class="column"></div>
+                            <button class="btn btn-primary mb-3 mt-4" type="submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Tabla -->
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Position</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Review</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                
+
+                    <tbody>
+                        {% for d in data %}
+                            <tr>
+                                <td>{{d.books_id}}</td>
+                                <td>{{d.books_name}}</td>  
+                                <td>{{d.books_author}}</td>  
+                                <td>{{d.books_date}}</td>  
+                                <td>{{d.books_category}}</td>  
+                                <td>{{d.books_position}}</td>
+                                <td>{{d.books_status}}</td>  
+                                <td>{{d.books_review}}</td>  
+                                <td>{{d.books_image}}</td>
+                                <td><button class="btn btn-primary btn-sm" id="btn-edit{{d.books_id}}" data-bs-toggle="modal" data-bs-target="#modal{{d.books_id}}">Edit</button></td>
+                                <td><a href="{{url_for('delete', books_id = d.books_id)}}" class="btn btn-danger btn-sm">Delete</a></td> 
+                            </tr>
+
+                            <!-- modal -->
+
+                            <div class="modal fade" id="modal{{d.books_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">{{d.books_name}}</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/edit/{{d.books_id}}" method="post">
+                                                <label>Id</label>
+                                                <input type="text" class="form-control mb-3" name="books_id" value="{{d.books_id}}">
+
+                                                <label>Name</label>
+                                                <input type="text" class="form-control mb-3" name="books_name" value="{{d.books_name}}">
+                                      
+                                                <label>Author</label>
+                                                <input type="text" class="form-control mb-3" name="books_author" value="{{d.books_author}}">
+
+                                                <label>Date</label>
+                                                <input type="text" class="form-control mb-3" name="books_date" value="{{d.books_date}}">
+
+                                                <label>Category</label>
+                                                <input type="text" class="form-control mb-3" name="books_category" value="{{d.books_category}}">
+
+                                                <label>Position</label>
+                                                <input type="text" class="form-control mb-3" name="books_position" value="{{d.books_position}}">
+
+                                                <label>Status</label>
+                                                <input type="text" class="form-control mb-3" name="books_status" value="{{d.books_status}}">
+
+                                                <label>Review</label>
+                                                <input type="text" class="form-control mb-3" name="books_review" value="{{d.books_review}}">
+                                            
+                                                <label>Image</label>
+                                                <input type="text" class="form-control mb-3" name="books_image" value="{{d.books_image}}">
+                                            
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
