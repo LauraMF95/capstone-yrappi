@@ -29,7 +29,7 @@ def get_books():
 
 ## Ruta para obtener un libro en React
 @app.route('/books/<books_id>', methods=['GET'])
-def get_boook(books_id):
+def get_book(books_id):
     try:
         cursor = db.database.cursor()
         sql = "SELECT * FROM books WHERE books_id = '{0}'".format(books_id)
